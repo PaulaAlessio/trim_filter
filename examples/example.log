@@ -1,0 +1,46 @@
+- Fastq input file: EColi_rRNA.fq.gz 
+- Read length: 50.
+- Min Quality: 27 (default).
+- Output prefix: out (default).
+- No Lmer_len specified. Using the length of the sequence L = 50.
+- Triming N bases: Trimming all N's.
+- Triming low Q bases: yes.
+- Removing contaminations in rRNA_CRUnit.fa.
+- Performing a quaternary tree search.
+- No tree file passed. Computing it on the fly.
+Starting program at: Tue Feb 28 21:45:41 2017
+STEP 1: Creating tree.
+Number of nodes before tree: 1 
+Reading fasta file: rRNA_CRUnit.fa.
+- Parameters: 
+ * Number of lines: 616
+ * Number of entries: 1
+ * Length of lines: 70
+ * Length of sequences in entries : [  42999 ].
+- Fasta file size: 43690 bytes. 
+- Allocating 43690 bytes in the buffer. 
+- Current allocated memory: 0 MB.
+- Deallocating the buffer.
+- Contents of rRNA_CRUnit.fa allocated.
+- Current allocated memory: 0 MB.
+- Constructing  tree ...
+- Tree allocated.
+- Contents of rRNA_CRUnit.fa deallocated.
+- Fasta contents deallocated.
+- Current allocated memory: 51 MB.
+Number of nodes after tree: 1672370 
+gzip: Success
+gzip: Success
+gzip: Success
+gzip: Success
+- Finished reading file.
+FINISHING PROGRAM. GENERAL INFO
+Fastq file had 250019 reads, of which:
+- 41 were discarded due to the presence of N's (-> *_NNNN.fq.gz)
+- 5 were discarded due to low quality (-> *_lowq.fq.gz)
+- 474 were trimmed due to the presence of N's (lowQ and cont filter)
+- 4 were trimmed due to low quality (-> contamination filter)
+- 49854 were classified as contaminations (-> *_cont.fq.gz)
+- 200119 were classified as good reads (-> *_good.fq.gz)
+Finishing program at: Tue Feb 28 21:45:44 2017
+Time elapsed: 0.497616 s.
