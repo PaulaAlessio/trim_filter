@@ -53,7 +53,7 @@ discarded reads containing N's, discarded contaminations.
 ## Filters
 
 
-####**LowQ**
+#### LowQ
 
 
 - `--trimQ no` or flag absent: nothing is done to the reads with low quality.
@@ -67,7 +67,6 @@ discarded reads containing N's, discarded contaminations.
   from 0) if:
     - the read has no further qualities below the threshold. 
     - The length of the remaining part is larger than the half of the original read length. 
-
   Examples (-q 27 [<]): 
  ```
  @ read 3435                                         @ read  3435 
@@ -105,7 +104,7 @@ discarded reads containing N's, discarded contaminations.
 L - Illumina 1.8+ Phred+33, convention, see [Wikipedia](https://en.wikipedia.org/wiki/FASTQ_format#Encoding).
 Adjust the values for a different convention.            
 
-#### **N trimming  **
+#### N trimming 
 
 We allow for the following options: 
 
@@ -135,7 +134,6 @@ IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII IIIIIIIIIIIIIIIIIIIIIIIIIIIII
 - `--trimN strip`: Obtain the largest N free subsequence of the read. Accept it 
    if is longer than the half of the original read length, redirect it to 
    `*_NNNN.fq.gz` otherwise. Example:
-
 ```
 @ read 1037                                        @ read 1037
 NNTCGACACAAGAAAATGCGCCAATTTTGAGCCAGACCCCAGTTACGCNN NNTCGACACAAGAAAATGCGCCAATTTTGAGCCAGACCCCAGTTACGCNN
