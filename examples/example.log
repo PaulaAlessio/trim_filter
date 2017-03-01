@@ -1,14 +1,14 @@
 - Fastq input file: EColi_rRNA.fq.gz 
 - Read length: 50.
 - Min Quality: 27 (default).
-- Output prefix: out (default).
+- Output prefix: tmp.
 - No Lmer_len specified. Using the length of the sequence L = 50.
-- Triming N bases: Trimming all N's.
-- Triming low Q bases: yes.
+- Triming N bases: stripping reads, extracting the longest N free subsequence.
+- Triming low Q bases: trimming low Q nucleotides at the ends.
 - Removing contaminations in rRNA_CRUnit.fa.
 - Performing a quaternary tree search.
 - No tree file passed. Computing it on the fly.
-Starting program at: Tue Feb 28 21:45:41 2017
+Starting program at: Wed Mar  1 11:29:09 2017
 STEP 1: Creating tree.
 Number of nodes before tree: 1 
 Reading fasta file: rRNA_CRUnit.fa.
@@ -41,6 +41,7 @@ Fastq file had 250019 reads, of which:
 - 474 were trimmed due to the presence of N's (lowQ and cont filter)
 - 4 were trimmed due to low quality (-> contamination filter)
 - 49854 were classified as contaminations (-> *_cont.fq.gz)
+- 200119 were classified as good reads (-> *_good.fq.gz)
 - 200119 were classified as good reads (-> *_good.fq.gz)
 Finishing program at: Tue Feb 28 21:45:44 2017
 Time elapsed: 0.497616 s.

@@ -22,9 +22,13 @@ void printHelpDialog(){
      " -k, --lmer   Lmer length: Length of the Lmers to be searched on the contaminations *fa.\n"
      "              Default: length of the reads.\n"
      " -t, --tree   Construct a tree for the search process. If missing, SA constructed.\n"
-     " -Q, --trimQ  trims lowQ reads if present. Discards all reads with lowQ bases if absent.\n"
-     " -N, --trimN  (all, ends) trims reads containing N's if all, only trims at the ends \n"
-     "              if ends and discards all reads with N's if absent.\n"
+     " -Q, --trimQ  no (or no flag): does nothing to low quality reads,\n"
+     "              ends: trims the ends of the read if their quality is below the threshold -q,\n"
+     "              all:  removes all reads containing at least one low quality nucleotide.\n"
+     " -N, --trimN  no (or no flag): does nothing to reads containing N's,\n" 
+     "              all: removes all reads containing N's,\n"
+     "              ends: trims ends of reads with N's,\n"
+     "              strips: looks for the largest substring containing no N's.\n"
      " -q           Minimum quality allowed. Optional option. Default 27 .\n"
      " -o           Output prefix (containing the path). Optional option. Default ./out.\n";
    fprintf(stderr, "%s", dialog );
@@ -37,7 +41,7 @@ static Param default_par(){
     par.Ifa = "";    
     par.Iidx = "";    
     par.Oprefix = "out";
-    par.trimQ = false;
+    par.trimQ = 0;
     par.trimN = 0;
     par.is_fa = false; 
     par.is_idx = false; 
@@ -54,14 +58,14 @@ Param  get_arg( int argc, char **argv){
       {"ifa",required_argument,0,'a'},  
       {"idx",required_argument,0,'x'},  
       {"lmer",required_argument,0,'k'},  
-      {"trimQ",no_argument,0,'Q'},  
+      {"trimQ",required_argument,0,'Q'},  
       {"trimN",required_argument,0,'N'},  
       {"tree",no_argument,0,'t'}, 
       {"help",no_argument,0,'h'}
    };
    int tmp;
    Param par = default_par(); 
-   while ( (tmp = getopt_long(argc, argv,"hl:q:o:tf:a:x:k:QN:", long_options, 0)) != -1){
+   while ( (tmp = getopt_long(argc, argv,"hl:q:o:tf:a:x:k:Q:N:", long_options, 0)) != -1){
       switch (tmp){
          case 'h': 
             printHelpDialog();
@@ -93,15 +97,29 @@ Param  get_arg( int argc, char **argv){
             par.Lmer_len = atoi(optarg);
             break;
          case 'Q':
-            par.trimQ = true;
+            if (!strcmp("no",optarg))
+               par.trimQ = NO;
+            else if(!strcmp("all",optarg))
+               par.trimQ = ALL;
+            else if (!strcmp("ends",optarg))
+               par.trimQ = ENDS;
+            else{
+               fprintf(stderr, "OPTIONS_ERROR: trimQ accepts: no, all, end as arguments.\n");
+               printHelpDialog();
+            }
+
             break;
          case 'N':
-            if(!strcmp("all",optarg))
-               par.trimN = 1;
+            if (!strcmp("no",optarg))
+               par.trimN = NO;
+            else if(!strcmp("all",optarg))
+               par.trimN = ALL;
             else if (!strcmp("ends",optarg))
-               par.trimN = 2;
+               par.trimN = ENDS;
+            else if (!strcmp("strip",optarg))
+               par.trimN = STRIP;
             else{
-               fprintf(stderr, "OPTIONS_ERROR: trimN accepts only all,ends as arguments.\n");
+               fprintf(stderr, "OPTIONS_ERROR: trimN accepts: no, all, end, strip as arguments.\n");
                printHelpDialog();
             }
             break;
@@ -131,9 +149,13 @@ Param  get_arg( int argc, char **argv){
       fprintf(stderr,"- Verifying matches using Lmers of length %d.\n", par.Lmer_len):
       fprintf(stderr,"- No Lmer_len specified. Using the length of the sequence L = %d.\n", 
             par.Lmer_len = par.L);
-   fprintf(stderr, "- Triming N bases: %s.\n", (par.trimN == 0 )? "no": 
-         (par.trimN == 1)? "Trimming all N's" : "Trimming N's at the ends" );
-   fprintf(stderr, "- Triming low Q bases: %s.\n", par.trimQ ? "yes": "no");
+   fprintf(stderr, "- Triming N bases: %s.\n", (par.trimN == NO )? "no": 
+               (par.trimN == ALL)? "removing all reads with N" : 
+               (par.trimN == ENDS)? "trimming N's at the ends" : 
+               "stripping reads, extracting the longest N free subsequence");
+   fprintf(stderr, "- Triming low Q bases: %s.\n", (par.trimQ == NO) ? "no":
+               (par.trimQ == ALL)? "removing all reads with low Q nucleotides":
+               "trimming low Q nucleotides at the ends");
    // Checking for fasta file
    par.is_fa?
            fprintf(stderr, "- Removing contaminations in %s.\n", par.Ifa): 

@@ -1,13 +1,15 @@
 #include <string.h>
 #include "trim_cont.h"
 #include "Lmer.h"
+#include "defines.h"
 
 /* returns 0 if no N's found, 1 if N's found*/
 int no_N(Fq_read *seq){
+   int i;
    char Lmer[seq-> L];
    memcpy(Lmer,seq->line2,seq -> L);
    Lmer_sLmer(Lmer,seq->L);
-   for(int i = 0; i < seq->L; i++){
+   for(i = 0; i < seq->L; i++){
       if ( Lmer[i]  > '\003' ){
          return 0;
       }
@@ -88,10 +90,18 @@ int Ntrim_ends(Fq_read *seq, int minL){
    }
 } 
 
-
+/* 0 if sequence contains low quality nucleotides, 1 otherwise*/
+int no_lowQ(Fq_read *seq, int minQ) {
+   int i;
+   for (i = 0; i < seq -> L; i++ ){
+     if (seq->line4[i] < (ZEROQ + minQ))
+         return 0;  
+   }
+   return 1;
+}
 
 /* 0 if not used, 1 if accepted as is, 2 if accepted and trimmed*/
-int trim_sequenceQ(Fq_read *seq, int minQ, bool trimQ, int minL){
+int Qtrim_ends(Fq_read *seq, int minQ, int minL){
    // Beginning of sequence:
    int L = (seq->L)-1;
    int t_start = 0;
@@ -110,12 +120,9 @@ int trim_sequenceQ(Fq_read *seq, int minQ, bool trimQ, int minL){
       // accepting sequence as is
       return 1; 
    } 
-   if(!trimQ){
-      // if !trimQ, discard the sequence if not complete
-      return 0;
-   }
+
    // trim the sequence
-   if ((t_end - t_start) < minL -1  ){
+   if ((t_end - t_start) < minL - 1 ){
       // Ignoring sequence
       return 0; 
    } 
@@ -128,14 +135,31 @@ int trim_sequenceQ(Fq_read *seq, int minQ, bool trimQ, int minL){
    sprintf(add," TRIMQ:%d:%d",t_start, t_end);
    strcat(seq -> line3, add);
    return 2;
+
 }
+
+
+
 /* Checking N  base callings*/
 /* 0 if not used, 1 if accepted as is, 2 if accepted and trimmed*/
 int trim_sequenceN(Fq_read *seq, int trimN, int minL ){
-   return (trimN == 0)? no_N(seq)  : 
-          (trimN == 1)? Nfree_Lmer(seq, minL):
-          (trimN == 2)? Ntrim_ends(seq, minL): -1;
+   return (trimN == NO)? 1 : 
+          (trimN == ALL)? no_N(seq):
+          (trimN == ENDS)? Ntrim_ends(seq, minL): 
+          (trimN == STRIP)? Nfree_Lmer(seq, minL): -1;
 }
+
+
+
+
+/* 0 if not used, 1 if accepted as is, 2 if accepted and trimmed*/
+int trim_sequenceQ(Fq_read *seq, int minQ, int trimQ, int minL){
+   return (trimQ == NO)? 1 : 
+          (trimQ == ALL)? no_lowQ(seq, minQ):
+          (trimQ == ENDS)? Qtrim_ends(seq, minQ, minL): -1;
+}
+
+
 
 // Check if a read is in the sequence or its reverse complement
 bool is_read_in_seq(Node *tree, Fq_read* seq, int L){

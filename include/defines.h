@@ -11,6 +11,13 @@
 #define PATH_MAXL 300
 
 
+
+#define NO 0
+#define ALL 1
+#define ENDS 2
+#define STRIP 3
+
+
 #define bool int
 #define true 1
 #define false 0
