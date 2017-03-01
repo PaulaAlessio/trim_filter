@@ -16,7 +16,7 @@
 
 
 ```
-Usage: trimFilter --ifq INPUT.fq -l READLEN [-q MINQ | --ifa INPUT.fa | --idx IDX_FILE | 
+Usage: trimFilter --ifq INPUT.fq -l READLEN [-q MINQ | --ifa INPUT.fa | --idx IDX_FILE |   
                   -o O_PREFIX | (--tree|-t) | --trimQ | --trimN [all|ends] | (--help|-h) ]
 Reads in a fq file (gz, bz2, z formats also accepted) and removes: 
   * Low quality reads (trim reads passing the --trim option),
@@ -52,22 +52,19 @@ discarded reads containing N's, discarded contaminations.
 
 ## Filters
 
-
 #### LowQ
 
-
 - `--trimQ no` or flag absent: nothing is done to the reads with low quality.
-
 - `--trimQ all`: all reads containing at least one low quality nucleotide are
   redirected to  `*_lowq.fq.gz`
-
 - `--trimQ ends`: look for low quality (below minQ) base callings at the beginning and at the end of the read. 
   Trim them at both ends until the quality is above the threshold. Keep the read in `*_good.fq.gz`
   and annotate in the fourth line where the read has been trimmed (starting to count
   from 0) if:
     - the read has no further qualities below the threshold. 
     - The length of the remaining part is larger than the half of the original read length. 
-  Examples (-q 27 [<]): 
+
+    Examples (-q 27 [<]): 
  ```
  @ read 3435                                         @ read  3435 
  CAGTTCTTTGGTGTAGATGGAGCAGGACGGGATACCCATACCGTGACCCA  CTTTGGTGTAGATGGAGCAGGACGGGATACCCATACCGTG
@@ -103,6 +100,7 @@ discarded reads containing N's, discarded contaminations.
 **Note:** qualities are evaluated assuming the reads to follow the
 L - Illumina 1.8+ Phred+33, convention, see [Wikipedia](https://en.wikipedia.org/wiki/FASTQ_format#Encoding).
 Adjust the values for a different convention.            
+
 
 #### N trimming 
 
