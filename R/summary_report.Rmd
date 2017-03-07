@@ -1,0 +1,28 @@
+---
+title: "Summary filtering report"
+output: 
+   html_document:
+params:
+    inputfolder:
+        value: x
+---
+
+```{r, echo = F}
+   library(knitr)
+   files <- list.files(params$inputfolder,pattern="bin$")
+   nombres <- gsub('_summary\\.bin$', '', files)
+   Ns <- length(files)
+   table <- matrix(nrow = Ns, ncol = 7,
+               dimnames = list(nombres,c("# reads","# acc reads", 
+               "%disc N's ","% disc lowQ","% trim N's","% trim lowQ","% cont" )))
+   i = 1
+   for (f in files){
+      to.read = file(paste0(params$inputfolder,"/",f) ,"rb") 
+      line <- readBin(to.read,integer(),n = 7,endian = "little")
+      line[3:7] = line[3:7]/line[1]*100
+      table [i, ] <- line
+      close(to.read)
+      i = i + 1
+   }
+   kable(table, digits = 3)
+```

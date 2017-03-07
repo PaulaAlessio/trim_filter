@@ -19,4 +19,18 @@ void buffer_output(FILE *fout, const char*a, const int len, const int fd_i){
    count[fd_i]+= len; 
 }
 
+void write_summary(int nreads, int n_good, int n_NNNN, int n_lowq, 
+      int n_trimN, int n_trimQ, int n_cont, char *summary){
 
+      FILE *f; 
+      f = fopen(summary,"wb");
+      fwrite(&nreads,sizeof(int),1,f);
+      fwrite(&n_good,sizeof(int),1,f);
+      fwrite(&n_NNNN,sizeof(int),1,f);
+      fwrite(&n_lowq,sizeof(int),1,f);
+      fwrite(&n_trimN,sizeof(int),1,f);
+      fwrite(&n_trimQ,sizeof(int),1,f);
+      fwrite(&n_cont,sizeof(int),1,f);
+      fclose(f); 
+
+} 

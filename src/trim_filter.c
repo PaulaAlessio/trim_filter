@@ -27,10 +27,12 @@ int main(int argc, char **argv){
    char fq_cont[PATH_MAXL]; strcpy(fq_cont, par.Oprefix);
    char fq_lowq[PATH_MAXL]; strcpy(fq_lowq, par.Oprefix);
    char fq_NNNN[PATH_MAXL]; strcpy(fq_NNNN, par.Oprefix);
+   char summary[PATH_MAXL]; strcpy(summary,par.Oprefix);
    strcat(fq_good,"_good.fq.gz");
    strcat(fq_cont,"_cont.fq.gz");
    strcat(fq_lowq,"_lowq.fq.gz");
    strcat(fq_NNNN,"_NNNN.fq.gz");
+   strcat(summary,"_summary.bin");
 
    FILE  *fq_in, *f_good, *f_cont, *f_lowq, *f_NNNN;
 
@@ -163,7 +165,8 @@ int main(int argc, char **argv){
    fprintf(stderr, "- %d were trimmed due to the presence of N's (lowQ and cont filter)\n",n_trimN); 
    fprintf(stderr, "- %d were trimmed due to low quality (-> contamination filter)\n",n_trimQ); 
    fprintf(stderr, "- %d were classified as contaminations (-> *_cont.fq.gz)\n",n_cont); 
-   fprintf(stderr, "- %d were classified as good reads (-> *_good.fq.gz)\n",n_good); 
+   fprintf(stderr, "- %d were classified as good reads (-> *_good.fq.gz)\n",n_good);
+   write_summary(nreads, n_good, n_NNNN, n_lowq, n_trimN, n_trimQ, n_cont, summary);
    // Obtaining elapsed time
    end = clock();
    cpu_time_used = (double)(end - start)/CLOCKS_PER_SEC;

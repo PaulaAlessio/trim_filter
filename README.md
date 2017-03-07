@@ -14,6 +14,7 @@
   
 ## Running the program
 
+`C` executable (in folder `bin`):
 
 ```
 Usage: trimFilter --ifq INPUT.fq -l READLEN [-q MINQ | --ifa INPUT.fa | --idx IDX_FILE |   
@@ -42,12 +43,31 @@ discarded reads containing N's, discarded contaminations.
  -o           Output prefix (containing the path). Optional option. Default ./out.
 ```
 
+`Rmd` script (in folder `R`):
+
+```
+Usage: 
+
+Rscript -e "rmarkdown::render('PATH/TO/summary_report.Rmd', 
+            params=list(inputfolder='O_PREFIX/FOLDER/'),
+            output_file='PATH/TO/HTML_OUTPUT_FILE.html')"
+```
+
+
 ## Output description
 
 - `O_PREFIX_good.fq.gz`: contains reads that passed all filters.
 - `O_PREFIX_NNNN.fq.gz`: contains reads with *too many* N's. 
 - `O_PREFIX_lowQ.fq.gz`: contains reads discarded due to low quality issues.
 - `O_PREFIX_cont.fq.gz`: contains contamination reads (matching the fasta sequence). 
+- `O_PREFIX_summary.bin`: binary file containing 7 `int`'s: 
+    * # initial reads, 
+    * # accepted reads, 
+    * # reads with N's that were discarded, 
+    * # low Quality reads that were discarded, 
+    * # reads trimmed due to the presence of N's, 
+    * # reads trimmed due to low Quality, 
+    * # reads identified as contaminations. 
 
 
 ## Filters
@@ -111,17 +131,17 @@ We allow for the following options:
 - `--trimN ends`: N's are trimmed if found at the ends, left "as is" otherwise. Example: 
 ```
 @ read 1037                                        @ read 1037
-NNTCGACACAAGAAAATGCGCCAATTTTGAGCCAGACCCCAGTTACGCNN NNTCGACACAAGAAAATGCGCCAATTTTGAGCCAGACCCCAGTTACGCNN
-+position: -2044610                                +position: -2044610  TRIMN:2:47 
-IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-@ read 1038                                        @ read 1038 
-AAAAAACGGTCGTGGTNGGCTACTGTTATTAAAGCGTTGGCTACAAAAAG AAAAAACGGTCGTGGTNGGCTACTGTTATTAAAGCGTTGGCTACAAAAAG
-+position: 1361068                                 +position: 1361068  
-IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-@ read 1039                                        @ read 1039                                         
-CCAACGGACNATGGAAGTGCTNCGGCTGGNGTTTTTATCCTCCGGCATTC CCAACGGACNATGGAAGTGCTNCGGCTGGNGTTTTTATCCTCCGGCATTC 
-+position: -4282223                                +position: -4282223                                
-IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII 
+NNTCGACACAAGAAAATGCGCCAATTTTGAGCCAGACCCCAGTTACGCNN TCGACACAAGAAAATGCGCCAATTTTGAGCCAGACCCCAGTTACGC
++position: -2044610                                +position: -2044610  TRIMN:2:47
+IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+@ read 1038                                        
+AAAAAACGGTCGTGGTNGGCTACTGTTATTAAAGCGTTGGCTACAAAAAG 
++position: 1361068                                 
+IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII 
+@ read 1039                                        
+CCAACGGACNATGGAAGTGCTNCGGCTGGNGTTTTTATCCTCCGGCATTC 
++position: -4282223                                
+IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII 
 @ read 1043                                        @ read 1043 
 AATCTGAAACGAAANCTGACAGCGNNCCCCGCTTCTGACAAAATAGGCGN AATCTGAAACGAAANCTGACAGCGNNCCCCGCTTCTGACAAAATAGGCG
 +position: -4685876                                +position: -4685876  TRIMN:0-48

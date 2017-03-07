@@ -12,4 +12,6 @@
 
 void buffer_output(FILE *fout, const char *a, const int len, const int fd_i);
 
+void write_summary(int nreads, int n_good, int n_NNNN, int n_lowq, 
+      int n_trimN, int n_trimQ, int n_cont, char *summary);
 #endif
