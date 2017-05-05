@@ -16,7 +16,9 @@
 #define ALL 1
 #define ENDS 2
 #define STRIP 3
-
+#define FRAC  3
+#define ENDSFRAC 4
+#define GLOBAL 5 
 
 #define bool int
 #define true 1

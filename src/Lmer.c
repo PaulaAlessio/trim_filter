@@ -19,6 +19,21 @@ void init_map(){
 }
 
 
+void init_map_SA(){
+   int i; 
+   for(i = 0; i < 256; i++)
+      LT[i] = 5; 
+   LT['a'] = 1;
+   LT['c'] = 2;
+   LT['g'] = 3;
+   LT['t'] = 4;
+   LT['A'] = 1;
+   LT['C'] = 2;
+   LT['G'] = 3;
+   LT['T'] = 4;
+}
+
+
 void Lmer_sLmer(char* Lmer, int L){
    int i;
    for (i = 0; i < L; i++){
@@ -33,6 +48,20 @@ void rev_comp(char *sLmer, int L){
       c = RC[(int) sLmer[i]];
       sLmer[i] = RC[(int) sLmer[j]];
       sLmer[j] = c;
+   } if(i == j){
+      sLmer[i] = RC[(int) sLmer[j]];
+   }
+}
+
+void rev_comp2(char *sLmer, int L){
+   char RC[5]= {4,3,2,1,5};
+   int c, i, j;
+   for (i = 0, j = L-1; i < j; i++, j--) {
+      c = RC[(int) sLmer[i] -1];
+      sLmer[i] = RC[(int) sLmer[j]-1];
+      sLmer[j] = c;
+   } if(i == j){
+      sLmer[i] = RC[(int) sLmer[j]-1];
    }
 }
 

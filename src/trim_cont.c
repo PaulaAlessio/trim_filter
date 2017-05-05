@@ -17,7 +17,6 @@ int no_N(Fq_read *seq){
    return 1;
 }
 
-
 /* 0 if not used, 1 if accepted as is, 2 if accepted and trimmed*/
 int Nfree_Lmer(Fq_read *seq, int minL){
    int pos = 0, pos_prev =0;
@@ -106,16 +105,10 @@ int Qtrim_ends(Fq_read *seq, int minQ, int minL){
    int L = (seq->L)-1;
    int t_start = 0;
    int t_end = L;
-   int i;
    while ( seq->line4[t_start] < (ZEROQ + minQ) )
       t_start++;
    while ( seq->line4[t_end] < (ZEROQ + minQ) )
       t_end--;
-   for ( i = t_start ; i <  t_end ; i++){
-      if ( seq -> line4[i] < (ZEROQ + minQ)){
-         return 0 ; 
-      }
-   }
    if ((t_end - t_start) == L ){
       // accepting sequence as is
       return 1; 
@@ -138,25 +131,90 @@ int Qtrim_ends(Fq_read *seq, int minQ, int minL){
 
 }
 
+/* 0 if not used, 1 if accepted as is*/
+int Qtrim_frac(Fq_read *seq, int minQ, int nlowQ ){
+   int ilowQ = 0, i = 0; 
+   while (i < (seq->L) &&  ilowQ < nlowQ){
+      if(seq->line4[i] < (ZEROQ + minQ)) ilowQ++;
+      i++;
+   }  
+   return (ilowQ == nlowQ) ? 0: 1; 
+}
 
+/* 0 if not used, 1 if accepted as is, 2 if accepted and trimmed*/
+int Qtrim_endsfrac(Fq_read *seq, int minQ, int minL, int nlowQ ){
+   // Beginning of sequence:
+   int L = (seq->L)-1;
+   int t_start = 0;
+   int t_end = L;
+   int ilowQ = 0;
+   int i;
+   while ( seq->line4[t_start] < (ZEROQ + minQ) )
+      t_start++;
+   while ( seq->line4[t_end] < (ZEROQ + minQ) )
+      t_end--;
+   i = t_start; 
+   while (i < t_end && ilowQ < nlowQ){
+      if(seq->line4[i] < (ZEROQ + minQ)) ilowQ++;
+      i++;
+   }  
+   if(ilowQ == nlowQ ) return 0; 
+   if ((t_end - t_start) == L ){
+      // accepting sequence as is
+      return 1; 
+   } 
+
+   // trim the sequence
+   if ((t_end - t_start) < minL - 1 ){
+      // Ignoring sequence
+      return 0; 
+   } 
+   (seq -> L) = t_end - t_start + 1;
+   memmove(seq -> line4, seq -> line4 + t_start, seq -> L);
+   memmove(seq -> line2, seq -> line2 + t_start, seq -> L);
+   seq -> line4[seq -> L] = '\0';
+   seq -> line2[seq -> L] = '\0';
+   char add[10]; 
+   sprintf(add," TRIMQ:%d:%d",t_start, t_end);
+   strcat(seq -> line3, add);
+   return 2;
+}
+
+/* returns 2, since they are all accepted and trimmed*/
+int Qtrim_global(Fq_read *seq, int left, int right ){
+   int t_end = seq ->L - left;
+   (seq -> L) -= (left+right);
+   memmove(seq -> line4, seq -> line4 + left, seq -> L);
+   memmove(seq -> line2, seq -> line2 + left, seq -> L);
+   seq -> line4[seq -> L] = '\0';
+   seq -> line2[seq -> L] = '\0';
+   char add[10]; 
+   sprintf(add," TRIMQ:%d:%d",left, t_end);
+   strcat(seq -> line3, add);
+   return 2;
+   
+}
 
 /* Checking N  base callings*/
 /* 0 if not used, 1 if accepted as is, 2 if accepted and trimmed*/
-int trim_sequenceN(Fq_read *seq, int trimN, int minL ){
-   return (trimN == NO)? 1 : 
-          (trimN == ALL)? no_N(seq):
-          (trimN == ENDS)? Ntrim_ends(seq, minL): 
-          (trimN == STRIP)? Nfree_Lmer(seq, minL): -1;
+int trim_sequenceN(Fq_read *seq, Param par ){
+   return (par.trimN == NO)? 1 : 
+          (par.trimN == ALL)? no_N(seq):
+          (par.trimN == ENDS)? Ntrim_ends(seq, par.minL): 
+          (par.trimN == STRIP)? Nfree_Lmer(seq, par.minL): -1;
 }
 
 
 
-
 /* 0 if not used, 1 if accepted as is, 2 if accepted and trimmed*/
-int trim_sequenceQ(Fq_read *seq, int minQ, int trimQ, int minL){
-   return (trimQ == NO)? 1 : 
-          (trimQ == ALL)? no_lowQ(seq, minQ):
-          (trimQ == ENDS)? Qtrim_ends(seq, minQ, minL): -1;
+int trim_sequenceQ(Fq_read *seq, Param par){
+   return (par.trimQ == NO)? 1 :
+          (par.trimQ == ALL)? no_lowQ(seq, par.minQ): 
+          (par.trimQ == ENDS) ? Qtrim_ends(seq,par.minQ, par.minL): 
+          (par.trimQ == FRAC) ? Qtrim_frac(seq,par.minQ, par.nlowQ): 
+          (par.trimQ == ENDSFRAC) ? Qtrim_endsfrac(seq, par.minQ, par.minL, par.nlowQ): 
+          (par.trimQ == GLOBAL) ? Qtrim_global(seq,par.globleft,par.globright): -1;  
+          
 }
 
 

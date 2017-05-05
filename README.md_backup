@@ -96,10 +96,6 @@ Rscript -e "rmarkdown::render('PATH/TO/summary_report.Rmd',
 
     Examples (-q 27 [<]): 
  ```
- @ read 1081133
- GTACATTGATGAGCAACATGGGGCTTGAACTGGCGCTGAAACAGTTAGGA  GTACATTGATGAGCAACATGGGGCTTGAACTGGCGCTGAAACAGTTAGG
- +position: -144740                                  +position: -144740 TRIMQ:0:48
- IIIIIIIIIIIII9IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII9  IIIIIIIIIIIII9IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
  @ read 3435                                         @ read  3435 
  CAGTTCTTTGGTGTAGATGGAGCAGGACGGGATACCCATACCGTGACCCA  CTTTGGTGTAGATGGAGCAGGACGGGATACCCATACCGTG
  +position: -19377                                   +position: -19377  TRIMQ:5:44
@@ -107,60 +103,29 @@ Rscript -e "rmarkdown::render('PATH/TO/summary_report.Rmd',
  @ read 108110                                       @ read 108110 
  CAGATAAATGCGAATGAATGGGTAACACTGGAGCTTTTAATGGCTGTAAC  AGATAAATGCGAATGAATGGGTAACACTGGAGCTTTTAATGGCTGTAA
  +position: -4142524                                 +position: -4142524  TRIMQ:1:48
- 9IIIIIIIIIIIIIIIIIII9IIII9III9IIIIIIIIIIIIIIIIIII9  IIIIIIIIIIIIIIIIIII9IIII9III9IIIIIIIIIIIIIIIIIII
+ 9IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII9  IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
  @ read 108111                                      
  AGCGTGACGGTGTAACGCCCGCCTTTTGATGACTGGGTTTCAAAGAAACG  
  +position: -3336785                                 
- 999999999999999IIIIIIII9IIIIIIIII9II99999999999999  
- ```
- Redirect the read to `*_lowq.fq.gz` otherwise.
-- `--trim frac (--percent p)`: discard the read if there are more
-   than `p%` nucleotides whose quality lies below the threshold. 
-   `p=5` per default.  
-    Examples (-q 27 [<]): 
- ```
- @ read 1081133
- GTACATTGATGAGCAACATGGGGCTTGAACTGGCGCTGAAACAGTTAGGA  GTACATTGATGAGCAACATGGGGCTTGAACTGGCGCTGAAACAGTTAGGA
- +position: -144740                                  +position: -144740 
- IIIIIIIIIIIII9IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII9  IIIIIIIIIIIII9IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII9
- @ read 3435                                         
- CAGTTCTTTGGTGTAGATGGAGCAGGACGGGATACCCATACCGTGACCCA  
- +position: -19377                                   
- 99999IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII99999  
- @ read 108110                                       
- CAGATAAATGCGAATGAATGGGTAACACTGGAGCTTTTAATGGCTGTAAC  
- +position: -4142524                                 
- 9IIIIIIIIIIIIIIIIIII9IIII9III9IIIIIIIIIIIIIIIIIII9  
- @ read 108111                                      
- AGCGTGACGGTGTAACGCCCGCCTTTTGATGACTGGGTTTCAAAGAAACG  
- +position: -3336785                                 
- 999999999999999IIIIIIII9IIIIIIIII9II99999999999999  
- ```
-- `--trim endsfrac (--percent p)`: first trim the ends as in the `ends` option. Accept 
-   the trimmed read if the number of low quality nucleotides does not exceed `p%` (default
-   `p = 5`).
-    Examples (-q 27 [<]): 
- ```
- @ read 1081133
+ 99IIIIIIIIIIII9IIIIIIII9IIIIIIIII9IIIIIIIIIIIIII99  
+ @ read 108112                                       @ read 108112
+ ACCGGTAATGATACCCGCCAGTACACCCATGTTTATTTCTGGGTTGATGG  GTAATGATACCCGCCAGTACACCCATGTTTATTTCTGGGTTGATGG
+ +position: -4548423                                 +position: -4548423 TRIMQ:4:49
+ 9999IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII  IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+ @ read 1081133                                      @ read 1081133 
  GTACATTGATGAGCAACATGGGGCTTGAACTGGCGCTGAAACAGTTAGGA  GTACATTGATGAGCAACATGGGGCTTGAACTGGCGCTGAAACAGTTAGG
  +position: -144740                                  +position: -144740 TRIMQ:0:48
- IIIIIIIIIIIII9IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII9  IIIIIIIIIIIII9IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
- @ read 3435                                         @ read  3435 
- CAGTTCTTTGGTGTAGATGGAGCAGGACGGGATACCCATACCGTGACCCA  CTTTGGTGTAGATGGAGCAGGACGGGATACCCATACCGTG
- +position: -19377                                   +position: -19377  TRIMQ:5:44
- 99999IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII99999  IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
- @ read 108110                                       
- CAGATAAATGCGAATGAATGGGTAACACTGGAGCTTTTAATGGCTGTAAC  
- +position: -4142524                                 
- 9IIIIIIIIIIIIIIIIIII9IIII9III9IIIIIIIIIIIIIIIIIII9  
- @ read 108111                                      
- AGCGTGACGGTGTAACGCCCGCCTTTTGATGACTGGGTTTCAAAGAAACG  
- +position: -3336785                                 
- 999999999999999IIIIIIII9IIIIIIIII9II99999999999999  
+ IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII9  IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+ @ read 108114                                      
+ CTTAACCTGAACATTGAAGAGTTTAAAGGCGAGCAGTTACGCGTGACGGG  
+ +position: 5075572                                     
+ IIIIIIIIIIIIIIIIIIIII9999999IIIIIIIIIIIIIIIIIIIIII    
+ @ read 108116                                      
+ TCAGGGTGCAGCGGTAGCGCCAGTTTCCAGTCCATCGCCATTTTGTAGAC  
+ +position: 1750468                                
+ 9IIIIIIIIIII9IIIIIIIIIII9IIIIIIII9IIIIIIIIIIIIIII9 
  ```
-
-- `--trim global --global n1 n2`: cut all read globally `n1` nucleotides from 
-   the left and `n2` from the right. 
+ Redirect the read to `*_lowq.fq.gz` otherwise.
 
 **Note:** qualities are evaluated assuming the reads to follow the
 L - Illumina 1.8+ Phred+33, convention, see [Wikipedia](https://en.wikipedia.org/wiki/FASTQ_format#Encoding).
@@ -238,9 +203,8 @@ IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
  
 ## Limitations
   
-  The tree option search  limits us to `~5MB` fasta files. 
-  Otherwise the tree occupies too much memory. SA search
-  is work in progress. 
+  Only the tree option search is implemented. This limits us 
+to `~5MB` fasta files. Otherwise the tree occupies too much memory.
 
 
 ## Contributors

@@ -103,7 +103,7 @@ int main(int argc, char **argv){
            get_sequence(seq,buffer,c1,c2, k);
            if( (k % 4) == 3 ){
               nreads++;
-              trimN = trim_sequenceN(seq, par.trimN, par.L>>1);
+              trimN = trim_sequenceN(seq, par);
               if (trimN == 0){
                 n_NNNN++;
                 Nchar = string_seq(seq, char_seq);
@@ -111,7 +111,7 @@ int main(int argc, char **argv){
               }else{
                 if(trimN == 2) 
                    n_trimN++;
-                trimQ = trim_sequenceQ(seq, par.minQ, par.trimQ, par.L>>1 );
+                trimQ = trim_sequenceQ(seq, par);
                 if (trimQ == 0){
                   n_lowq++;
                   Nchar = string_seq(seq, char_seq);
