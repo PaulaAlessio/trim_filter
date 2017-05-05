@@ -84,16 +84,51 @@ Rscript -e "rmarkdown::render('PATH/TO/summary_report.Rmd',
 
 ## Filters
 
+#### Impurities  
+
+ Contaminations are removed if a fasta file is given as an input. 
+ Two methods have been implemented to check for contaminations: 
+
+- **tree**: this method is designed to identify impurities from 
+  small sequences, such as 
+  if `--tree` is passed, then a tree with all 
+  possible substrings of length `Lmer` is constructed,
+  set to the read length by default. If all `Lmer`'s 
+  of a read are found in the tree, then the read is 
+  classified as a contamination and redirected to 
+  `*_cont.fq.gz`. Some considerations about this 
+  method: 
+    - it does not introduce false negatives, i.e., it cannot
+      be that a read is exactly contained in the `*fasta` file
+      and is not discarded. 
+    - is very fast. Every search is `O( 2 * Lmer * (L - Lmer + 1))` (the reverse complement
+      of the read has to be checked also).
+    - has the drawback that is very memory intensive.  
+
+- **SA**: if the `fasta` file against which we have to 
+  look for contaminations is large (e.g. the *Drosophila* genome), 
+  then constructing a tree is not viable due to memory limitations. 
+  In this case, we construct a suffix array from the genome, that 
+  should not exceed 4gb pairs. The strategy followed is analogous
+  to the one in `STAR`: a binary search for exact matches is then
+  performed, but a prefix index of `m` bases is constructed, 
+  so that we do not have to jump so much within a binary search. 
+  Some remarks: 
+   - it is not fully implemented yet. It works for a 
+     `fasta` file with one entry. 
+   - The complexity is `O(log(Lgenome)*2*L)`, where L is the read length. 
+ 
+
 #### LowQ
 
 - `--trimQ no` or flag absent: nothing is done to the reads with low quality.
 - `--trimQ all`: all reads containing at least one low quality nucleotide are
   redirected to  `*_lowq.fq.gz`
-- `--trimQ ends`: look for low quality (below minQ) base callings at the beginning and at the end of the read. 
+- `--trimQ ends`: look for low quality (below minQ) base callings at the beginning and at the end of the read.
   Trim them at both ends until the quality is above the threshold. Keep the read in `*_good.fq.gz`
   and annotate in the fourth line where the read has been trimmed (starting to count
-  from 0) if the length of the remaining part is larger than the half of the original read length. 
-
+  from 0) if the length of the remaining part is larger than the half of the original read length.
+  Redirect the read to `*_lowq.fq.gz` otherwise.
     Examples (-q 27 [<]): 
  ```
  @ read 1081133
@@ -113,8 +148,8 @@ Rscript -e "rmarkdown::render('PATH/TO/summary_report.Rmd',
  +position: -3336785                                 
  999999999999999IIIIIIII9IIIIIIIII9II99999999999999  
  ```
- Redirect the read to `*_lowq.fq.gz` otherwise.
-- `--trim frac (--percent p)`: discard the read if there are more
+
+- `--trim frac (--percent p)`: redirect  the read to `*_lowq.fq.gz` if there are more
    than `p%` nucleotides whose quality lies below the threshold. 
    `p=5` per default.  
     Examples (-q 27 [<]): 
@@ -139,6 +174,7 @@ Rscript -e "rmarkdown::render('PATH/TO/summary_report.Rmd',
 - `--trim endsfrac (--percent p)`: first trim the ends as in the `ends` option. Accept 
    the trimmed read if the number of low quality nucleotides does not exceed `p%` (default
    `p = 5`).
+   Redirect the read to `*_lowq.fq.gz` otherwise.
     Examples (-q 27 [<]): 
  ```
  @ read 1081133
