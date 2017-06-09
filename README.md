@@ -8,7 +8,7 @@
 
 ## Installation
 
- - Requires: fill that in. Basically: Linux, gcc  
+ - Requires: fill that in. Basically: Linux, gcc. 
  - Clone the repository.
  - Run make.
   
