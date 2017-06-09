@@ -1,6 +1,6 @@
 # trimFilter user manual
 
- This programs reads a `fastq` file as an input, and performs the following filters:
+ This program reads a `fastq` file as an input, and performs the following filters:
  - If a `fasta` file is passed as an input (e.g., rRNA ), it will discard reads
    that are contained in it. 
  - Discards/trims low quality reads (see below for a description of  *low quality*).
