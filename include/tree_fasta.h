@@ -18,7 +18,7 @@ typedef struct _param_fa{
 
 typedef struct _fasta{
    long int  N ;
-   char *seq; 
+   unsigned char *seq; 
 } Fasta;
 
 

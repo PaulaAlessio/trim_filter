@@ -180,7 +180,7 @@ void fasta_tree(char *filename,Node *tree, int L){
    int i; 
    fprintf(stderr,"- Constructing  tree ...\n");
    for (i = 0 ; i < nentries; i++){
-      construct_tree(tree,(fasta+i)->seq, (fasta+i)-> N, L );
+      construct_tree(tree,(char *)(fasta+i)->seq, (fasta+i)-> N, L );
    }
    fprintf(stderr,"- Tree allocated.\n");
    fprintf(stderr,"- Contents of %s deallocated.\n", filename);
