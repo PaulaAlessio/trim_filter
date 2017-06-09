@@ -73,13 +73,13 @@ Rscript -e "rmarkdown::render('PATH/TO/summary_report.Rmd',
 - `O_PREFIX_lowQ.fq.gz`: contains reads discarded due to low quality issues.
 - `O_PREFIX_cont.fq.gz`: contains contamination reads (matching the fasta sequence). 
 - `O_PREFIX_summary.bin`: binary file containing 7 `int`'s: 
-    * # initial reads, 
-    * # accepted reads, 
-    * # reads with N's that were discarded, 
-    * # low Quality reads that were discarded, 
-    * # reads trimmed due to the presence of N's, 
-    * # reads trimmed due to low Quality, 
-    * # reads identified as contaminations. 
+    * \# initial reads, 
+    * \# accepted reads, 
+    * \# reads with N's that were discarded, 
+    * \# low Quality reads that were discarded, 
+    * \# reads trimmed due to the presence of N's, 
+    * \# reads trimmed due to low Quality, 
+    * \# reads identified as contaminations. 
 
 
 ## Filters
